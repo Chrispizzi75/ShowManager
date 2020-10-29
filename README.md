@@ -40,8 +40,3 @@ and/or the port you want to use; port='8081' is the default one but you can spec
 When you have lunched your app, it automatically opens the default browser on the '127.0.0.1:8081' (or what you have changed before) page. If that doesn't happen you can manually open the browser and navigate to '127.0.0.1:8081' page.
 In the same way you can connect your smartphone and access to the same page and manage the app with your phone. This is why I've created this app, to be able to control my show from my phone.
 One important thing: the smartphone must be connected to the same wi-fi network of your Raspberry pi (the wi-fi connection must be on).
-
-**Version 1.3 released**
-
-App updated to work with the last release of REMI 2020.8.6.
-Added scheduler.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Author: Christian Pizzi
-# Ver. 1.3
+# Ver. 1.0
 # Software needed:
 # LightShowPi ver. (1.4) Python3
 # Remi ver. 2020.8.6

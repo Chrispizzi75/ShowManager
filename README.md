@@ -1,0 +1,2 @@
+# ShowManager
+ Lightshowpi show manager

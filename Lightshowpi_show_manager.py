@@ -1424,19 +1424,22 @@ class MyApp(App):
         self.PlayS.children['widBtPlayS'].children['btPlaySLoad'].set_text('STOP')
         overr = Path(str(self.LightShowPiOverrides.absolute())+'/overrides.cfg')
         cp2 = overr.absolute()
+        runMusic = False
 ##         if appo[0].suffix == '.py' or appo[0].suffix == '.cfg':
         if appo[0].suffix == '.cfg':
             cp1 = appo[0].absolute()
             try:
                 shutil.copyfile(cp1, cp2)
+                runMusic = True
             except:
                 msg = 'Problem to create overrides file! Check the writing permission in Config folder.'
                 self.dialog = gui.GenericDialog(title='ERROR', message=msg, width='400px', style={'border':'1px solid black', 'border-radius':'10px', 'position':'relative', 'top':'50px',})
                 self.dialog.cancel.style['display'] = 'none'
                 self.dialog.conf.style.update({'margin-right':'150px', 'width':'100px'})
                 self.dialog.show(self)
-            pre_show = Path(str(self.LightShowPiPy.absolute())+'/prepostshow.py')
-            os_string = 'sudo python {} "preshow"'.format(pre_show.absolute())
+            if runMusic:
+                pre_show = Path(str(self.LightShowPiPy.absolute())+'/prepostshow.py')
+                os_string = 'sudo python {} "preshow"'.format(pre_show.absolute())
         else:
             if self.NoConfig:
                 cp1 = self.Default_cfg.absolute()
@@ -1444,20 +1447,25 @@ class MyApp(App):
                 cp1 = appo[1].absolute()
             try:
                 shutil.copyfile(cp1, cp2)
+                runMusic = True
             except:
                 msg = 'Problem to create overrides file! Check the writing permission in Config folder.'
                 self.dialog = gui.GenericDialog(title='ERROR', message=msg, width='400px', style={'border':'1px solid black', 'border-radius':'10px', 'position':'relative', 'top':'50px',})
                 self.dialog.cancel.style['display'] = 'none'
                 self.dialog.conf.style.update({'margin-right':'150px', 'width':'100px'})
                 self.dialog.show(self)
-            syn_lig = Path(str(self.LightShowPiPy.absolute())+'/synchronized_lights.py')
+            if runMusic:
+                syn_lig = Path(str(self.LightShowPiPy.absolute())+'/synchronized_lights.py')
 #             print(syn_lig)
 #             print(cp1)
 #             os_string = 'sudo python {} --config={} --file={}'.format(syn_lig.absolute(), cp1, appo[0].absolute())
-            os_string = 'sudo python {} --file={}'.format(syn_lig.absolute(), appo[0].absolute())
+                #os_string = 'sudo python {} --file={}'.format(syn_lig.absolute(), appo[0].absolute())
+                fileName = '"' + str(appo[0].absolute()) + '"'
+                os_string = 'sudo python {} --file={}'.format(syn_lig.absolute(), fileName)
 #         print(os_string)
-        self.t = threading.Thread(target=self.sys_thread, args=(os_string,), daemon=True)
-        self.t.start()
+        if runMusic:
+            self.t = threading.Thread(target=self.sys_thread, args=(os_string,), daemon=True)
+            self.t.start()
 
 #PLAY NEXT function
     def playSnext_dialog(self, widget):
@@ -1548,7 +1556,7 @@ class MyApp(App):
             self.Volume = 0
             self.PlayS.children['widBtPlayS2'].children['btPlaySVolumeOn'].set_text('Vol OFF')
 #             vol = str(self.LightShowPiFolder.absolute()) + '/bin/vol ' + str(self.Volume)
-            vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+            vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
             os.system(vol)  
         else:
             self.VolumeOn = 1
@@ -1556,7 +1564,7 @@ class MyApp(App):
             volnum = 'Vol ' + str(self.Volume) + ('%')
             self.PlayS.children['widBtPlayS2'].children['btPlaySVolumeOn'].set_text(volnum)
 #             vol = str(self.LightShowPiFolder.absolute()) + '/bin/vol ' + str(self.Volume)
-            vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+            vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
             os.system(vol)
 
 #PLAY VOLUME +
@@ -1568,7 +1576,7 @@ class MyApp(App):
             volnum = 'Vol ' + str(self.Volume) + ('%')
             self.PlayS.children['widBtPlayS2'].children['btPlaySVolumeOn'].set_text(volnum)
 #             vol = str(self.LightShowPiFolder.absolute()) + '/bin/vol ' + str(self.Volume)
-            vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+            vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
             os.system(vol)
    
 #PLAY VOLUME -
@@ -1580,12 +1588,12 @@ class MyApp(App):
                 self.VolumeOn = 0
                 self.PlayS.children['widBtPlayS2'].children['btPlaySVolumeOn'].set_text('Vol OFF')
 #                 vol = str(self.LightShowPiFolder.absolute()) + '/bin/vol ' + str(self.Volume)
-                vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+                vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
             else:
                 volnum = 'Vol ' + str(self.Volume) + ('%')
                 self.PlayS.children['widBtPlayS2'].children['btPlaySVolumeOn'].set_text(volnum)
 #                 vol = str(self.LightShowPiFolder.absolute()) + '/bin/vol ' + str(self.Volume)
-                vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+                vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
             os.system(vol)
     
 # PLAYS - update songs list in play window
@@ -2256,7 +2264,7 @@ class MyApp(App):
             volnum = 'Vol ' + str(self.Volume) + ('%')
             self.PlayS.children['widBtPlayS2'].children['btPlaySVolumeOn'].set_text(volnum)
 #             vol = str(self.LightShowPiFolder.absolute()) + '/bin/vol ' + str(self.Volume)
-            vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+            vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
             os.system(vol)
             #START MUSIC
             self.PlayON = True
@@ -2394,7 +2402,7 @@ class MyApp(App):
 
     def alsa_dev_set(self, widget):
         self.AlsaDevice = self.AlsaDev.get_text()
-        vol = "amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
+        vol = "sudo amixer sset " + self.AlsaDevice + " " + str(self.Volume) + "%"
         os.system(vol)
         print(vol)
 
